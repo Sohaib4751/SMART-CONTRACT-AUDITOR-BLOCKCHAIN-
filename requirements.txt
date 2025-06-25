@@ -1,0 +1,5 @@
+slither-analyzer
+transformers
+torch
+prettytable
+venv\Scripts\activate 

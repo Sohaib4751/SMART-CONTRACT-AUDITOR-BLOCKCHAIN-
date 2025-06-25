@@ -1,0 +1,50 @@
+# Import necessary libraries
+from transformers import AutoTokenizer, AutoModelForCausalLM
+
+# Step 1: Load the AI Model for Solidity Code Analysis
+def load_model():
+    model_name = "Salesforce/codegen-2B-multi"  # You can choose the model as per your system's capacity
+    tokenizer = AutoTokenizer.from_pretrained(model_name)
+    model = AutoModelForCausalLM.from_pretrained(model_name)
+    return model, tokenizer
+
+# Step 2: Analyze Solidity Contract Code
+def analyze_contract_code(model, tokenizer, contract_code):
+    # Tokenize the contract code
+    tokens = tokenizer(contract_code, return_tensors="pt")
+
+    # Generate output from the model
+    output = model.generate(tokens['input_ids'], max_length=500)
+
+    # Decode the output to get the analysis result
+    analysis_result = tokenizer.decode(output[0], skip_special_tokens=True)
+    return analysis_result
+
+# Step 3: Main function to run the analysis
+def main():
+    # Sample Solidity code to analyze
+    contract_code = """
+    pragma solidity ^0.8.0;
+
+    contract VulnerabilityExample {
+        uint256 public number;
+
+        function setNumber(uint256 _number) public {
+            number = _number;
+        }
+    }
+    """
+    
+    # Load the AI model and tokenizer
+    model, tokenizer = load_model()
+    
+    # Perform the analysis
+    analysis_result = analyze_contract_code(model, tokenizer, contract_code)
+    
+    # Print the analysis result
+    print("AI Analysis of the Contract Code:")
+    print(analysis_result)
+
+# Run the script
+if __name__ == "__main__":
+    main()
